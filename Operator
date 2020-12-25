@@ -1,0 +1,16 @@
+#include <iostream>
+#include "GetOperand.h"
+
+char getOperand(char& operand) {
+    while (true) {
+        std::cout << "Ââåäèòå îïåðàöèþ: ";
+        std::cin >> operand;
+        std::cin.ignore(32767, '\n');
+        if (operand == '+' || operand == '/' || operand == '-' || operand == '*' || operand == '**' || operand == '!' || operand == '%') {
+            return operand;
+        }
+        std::cout << "Ââåäèòå ïðàâèëüíûé çíàê îïåðàöèè" << std::endl;
+    }
+    return operand;
+}
+© 2020 GitHub, Inc.
