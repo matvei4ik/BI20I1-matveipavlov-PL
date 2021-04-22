@@ -1,0 +1,26 @@
+#include <iostream>
+#include <math.h>
+using namespace std;
+int main()
+{
+	setlocale(LC_CTYPE, "Russian");
+	cout << "d*c mod f(n)=1" << endl;
+	char flag = 'y';
+	while (flag == 'y') {
+		int a, b, c;
+		cout << "Введите простое число: ";
+		cin >> a;
+		cout << "Введите простое число: ";
+		cin >> b;
+		cout << "Введите простое число: ";
+		cin >> c;
+		int fn = (a - 1) * (b - 1);
+		int d = 1;
+		while (d * c % fn != 1) {
+			d += 1;
+		}
+		cout << "d: " << d << endl;
+		cout << "Введите [y] для продолжения, [n] для выхода: ";
+		cin >> flag;
+	}
+}
