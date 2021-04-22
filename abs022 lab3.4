@@ -1,0 +1,50 @@
+#include <iostream>
+#include <math.h>
+using namespace std;
+int Evklid(int m, int c) {
+	int t1, t2;
+	int q;
+	int u2 = 0;
+	int v2 = 1;
+	while (c > 0) {
+		q = m / c;
+		t1 = m % c;
+		t2 = u2 - q * v2;
+		m = c;
+		u2 = v2;
+		c = t1;
+		v2 = t2;
+	}
+	return u2;
+}
+int main() {
+	setlocale(LC_CTYPE, "Russian");
+	char flag = 'y';
+	while (flag == 'y') {
+		cout << "с*d mod m=1" << endl;
+		int c, m;
+		cout << "Введите значение m: ";
+		cin >> m;
+		cout << "Введите значение c: ";
+		cin >> c;
+		int proverka1 = m;
+		int proverka2 = c;
+		while (proverka1 != proverka2) {
+			if (proverka1 > proverka2)
+				proverka1 = proverka1 - proverka2;
+			else proverka2 = proverka2 - proverka1;
+		}
+		if (proverka1 == 1) {
+			int d = Evklid(m, c);
+			if (d < 0) {
+				d = d + m;
+			}
+			cout << "Значение d = " << d << endl;
+		}
+		else {
+			cout << "Введенные числа не являются взаимно простыми" << endl;
+		}
+		cout << "Введите [y] для продолжения, [n] для выхода: ";
+		cin >> flag;
+	}
+}
