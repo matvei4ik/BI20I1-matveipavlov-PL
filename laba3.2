@@ -1,0 +1,59 @@
+#include <iostream>
+
+#include <math.h>
+
+#include <iomanip>
+
+using namespace std;
+
+double sum(double x, double eps, int& n) {
+
+	double s; //сумма
+
+	double sn; //коэффициент перехода
+
+	for (s = 0, n = 1, sn = 1; sn > eps; n++) {
+
+		s += sn;
+
+		sn = (-sn * abs(x) * (3 * n - 2) / (3 * n));
+
+	}
+
+	return s;
+
+}
+
+int main()
+
+{
+
+	setlocale(LC_CTYPE, "Russian");
+
+	double eps, x, dx, y;
+
+	int n;
+
+	cout << "Введите точность: ";
+
+	cin >> eps;
+
+	cout << endl << setw(25) << "Значения функции" << setw(15) << endl;
+
+	cout << "____________________________________" << endl;
+
+	cout << '|' << setw(5) << 'N' << setw(5) << '|' << setw(5) << 'X' << setw(5) << '|' << setw(9) << "F(x)" << setw(6) << '|' << endl;
+
+	cout << "____________________________________" << endl;
+
+	for (x = -1, dx = 0.1; x < 1; x += dx) {
+
+		y = sum(x, eps, n);
+
+		cout << '|' << setw(5) << n << setw(5) << '|' << setw(5) << x << setw(5) << '|' << setw(10) << fixed << setprecision(4) << y << fixed << setprecision(1) << setw(5) << '|' << endl;
+
+		cout << "____________________________________" << endl;
+
+	}
+
+}
