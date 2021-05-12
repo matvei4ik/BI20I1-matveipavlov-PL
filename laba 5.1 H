@@ -1,0 +1,15 @@
+#pragma once
+#include <iostream>
+#include <map>
+#include <string>
+enum class TYPE
+{
+	CLASS = 1,
+	NEXT = 2,
+	VIEW = 3
+};
+void F_CLASS(std::multimap <int, std::string>& day, int N_month, int month[]);
+
+int F_NEXT(int month[], int N_month, std::multimap <int, std::string>& day);
+
+void F_VIEW(std::multimap <int, std::string> day, int N_month, int month[]);
