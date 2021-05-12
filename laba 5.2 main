@@ -1,0 +1,48 @@
+#include "Header.h"
+int main()
+{
+	setlocale(LC_ALL, "RUS");
+	multimap <int, string> plane_and_town;
+	vector <int> keys;
+	int com, number, N;
+	string town, command;
+	while (1)
+	{
+		com = 0;
+		cin >> command;
+		if (command == "CREATE_PLANE") {
+			com = 1;
+		}
+		if (command == "PLANES_FOR_TOWN")
+		{
+			com = 2;
+		}
+		if (command == "TOWNS_FOR_PLANE")
+		{
+			com = 3;
+		}
+		if (command == "PLANES")
+		{
+			com = 4;
+		}
+		switch (TYPE(com)) {
+		case TYPE::CREATE_PLANE: {
+			cin >> number >> N;
+			F_CREATE_PLANE(number, N, plane_and_town);
+			keys.push_back(number);
+			break; }
+		case TYPE::PLANES_FOR_TOWN: {
+			cin >> town;
+			F_PLANES_FOR_TOWN(plane_and_town, town, keys);
+			break; }
+		case TYPE::TOWNS_FOR_PLANE:
+		{cin >> number;
+		F_TOWNS_FOR_PLANE(number, town, keys, plane_and_town);
+		break; }
+		case TYPE::PLANES: {
+			F_PLANES(number, town, plane_and_town, keys);
+			break; }
+		default: return 0;
+		}
+	}
+}
