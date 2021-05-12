@@ -1,1 +1,67 @@
-
+#include "Header.h"
+using namespace std;
+void F_CLASS(std::multimap <int, std::string>& day, int N_month, int month[])
+{
+	int i;
+	std::string s;
+	cin >> i;
+	cin >> s;
+	if (i <= month[N_month])
+	{
+		day.emplace(make_pair(i, s));
+	}
+	else
+	{
+		cout << "We can't set this day" << endl;
+	}
+}
+int F_NEXT(int month[], int N_month, std::multimap <int, std::string>& day)
+{
+	int k;
+	N_month++;
+	if (N_month > 12)
+	{
+		N_month -= 12;
+	}
+	for (int i = month[N_month] + 1; i <= 31; i++)
+	{
+		k = day.count(i);
+		if (k != 0)
+		{
+			for (int j = 0; j < k; j++)
+			{
+				string t = day.find(i)->second;
+				day.emplace(make_pair(month[N_month] - 1, t));
+				day.erase(i);
+			}
+		}
+	}
+	return N_month;
+}
+void F_VIEW(std::multimap <int, std::string> day, int N_month, int month[])
+{
+	int i, y;
+	cin >> i;
+	auto range = day.equal_range(i);
+	if (i <= month[N_month])
+	{
+		y = day.count(i);
+		if (y != 0)
+		{
+			cout << "In " << i << " day " << y << " classes in university:" << endl;
+			for (auto j = range.first; j != range.second; j++)
+			{
+				cout << j->second << ' ';
+			}
+			cout << endl;
+		}
+		else
+		{
+			cout << "In " << i << " day we all free" << endl;
+		}
+	}
+	else
+	{
+		cout << "We can't see this day" << endl;
+	}
+}
