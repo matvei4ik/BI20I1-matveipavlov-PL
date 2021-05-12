@@ -1,0 +1,19 @@
+#pragma once
+#include <iostream>
+#include <map>
+#include <vector>
+using namespace std;
+enum class TYPE
+{
+	CREATE_PLANE = 1,
+	PLANES_FOR_TOWN = 2,
+	TOWNS_FOR_PLANE = 3,
+	PLANES = 4
+};
+void F_CREATE_PLANE(int number, int N, std::multimap<int, std::string>& plane_and_town);
+void F_PLANES_FOR_TOWN(std::multimap<int, std::string>& plane_and_town, string town,
+	std::vector <int> keys);
+void F_TOWNS_FOR_PLANE(int number, string town, std::vector <int> keys, std::multimap<int,
+	std::string>& plane_and_town);
+void F_PLANES(int number, string town, std::multimap <int, std::string> plane_and_town,
+	std::vector <int> keys);
