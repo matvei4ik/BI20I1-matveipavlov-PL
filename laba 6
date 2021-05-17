@@ -1,0 +1,237 @@
+#include <iostream>
+#include <vector>
+#include <random>
+#include <time.h>
+using namespace std;
+enum type
+{F1_1 = 1,
+F1_2,
+F1_3,
+EXIT,};
+void function_1()
+{int n, m;
+cin >> n >> m;
+vector<vector<int>> matrix(m, vector <int>(n));
+for (int i = 0; i < m; i++)
+for (int j = 0; j < n; j++)
+{matrix[i][j] = 10 * (i + 1);}
+for (auto it: matrix)
+{cout << "|";
+for (auto i : it)
+{printf ("%4d", i);}
+cout << "|" << endl;}}
+void function_2()
+{minstd_rand gen(time(0));
+uniform_int_distribution<int> uid(1, 10);
+int n, m;
+cin >> n >> m;
+vector<vector<int>> matrix(m, vector <int>(n));
+for (int i = 0; i < m; i++)
+for (int j = 0; j < n; j++)
+{matrix[i][j] = uid(gen);}
+for (auto it: matrix)
+{cout << "|";
+for (auto i : it)
+{printf ("%4d", i);}
+cout << "|" << endl;}
+int maxj = INT_MIN, minj = INT_MAX,
+maxi = 0, mini = 0;
+for (int i = 0; i < m; i++)
+for (int j = 0; j < n; j++)
+{if (matrix[i][j] > maxj)
+{maxj = matrix[i][j];
+maxi = i;}
+if (matrix[i][j] < minj)
+{minj = matrix[i][j];
+mini = i;}}
+cout << "Строка с минимальным элементом: " << mini + 1 << endl <<
+"Строка с максимальным элементом: " <<maxi + 1 <<endl;
+swap(matrix[mini], matrix[maxi]);
+for (auto it : matrix)
+{cout << "|";
+for (auto i : it)
+{printf("%4d", i);}
+cout << "|" << endl;}}
+void function_3()
+{minstd_rand gen(time(0));
+uniform_int_distribution<int> uid(1, 5);
+int n;
+cin >> n;
+vector<vector<int>> matrix(n, vector <int>(n));
+for (int i = 0; i < n; i++)
+for (int j = 0; j < n; j++)
+{matrix[i][j] = uid(gen);}
+for (auto it : matrix)
+{cout << "|";
+for (auto i : it)
+{printf("%4d", i);
+}cout << "|" << endl;}
+int cnt = 0;
+for (int i = 0; i < n; i++)
+for (int j = 0; j < n; j++)
+{if (matrix[i][j] != matrix[j][i]) cnt++;}
+if (cnt) cout << "NO" << endl;
+else cout << "YES" << endl;
+cnt = 0;
+for (int i = 0; i < n; i++)
+for (int j = 0; j < n; j++)
+{if (matrix[i][j] != matrix[n - j - 1][n - i - 1]) cnt++;}
+if (cnt) cout << "NO" << endl;
+else cout << "YES";}
+int main()
+{setlocale(LC_ALL, "Russian");
+int command = 0;
+cout << "<1> - Задание 1.1" << endl;
+cout << "<2> - Задание 1.2" << endl;
+cout << "<3> - Задание 1.3" << endl;
+cout << "<4> - Выход" << endl;
+while (1)
+{cout << endl << "Введите номер команды: ";
+cin >> command;
+switch (command)
+{case F1_1:
+function_1();
+break;
+case F1_2:
+function_2();
+break;
+case F1_3:
+function_3();
+break;
+case EXIT:
+exit(0);
+default:
+cout << "Неизвестная команда" << endl;}}
+return 0;}
+
+
+
+
+
+
+#include <iostream>
+#include <vector>
+#include <map>
+#include <string>
+using namespace std;
+string HELP(string text, string key)
+{map <int, char> Num;
+int num = 0;
+while (num < 26)
+{Num[num] = 'a' + num;
+num++;}
+Num[num] = ' ';
+vector<vector<char>> code(27, vector <char>(27));
+for (int i = 0; i < 27; i++)
+for (int j = 0; j < 27; j++)
+{code[i][j] = Num[(j + i) % 27];}
+vector<pair<char, char>> mess;
+for (int i = 0; i < text.size(); i++)
+{mess.push_back(make_pair(text[i], key[i % key.size()]));}
+string crypt = text;
+int cs = 0, ts = 0, i = 0;
+for (auto it : mess)
+{for (auto it_1 : Num)
+{if (it_1.second == it.first)
+ts = it_1.first;}
+for (auto it_2 : Num)
+{if (it_2.second == it.second)
+cs = it_2.first;}
+crypt[i++] = code[ts][cs];}
+return crypt;}
+string VERYHELP(string crypt, string key)
+{map <int, char> Num;
+int num = 0;
+while (num < 26)
+{Num[num] = 'a' + num;
+num++;}
+Num[num] = ' ';
+vector<pair<char, char>> mess;
+for (int i = 0; i < crypt.size(); i++)
+{mess.push_back(make_pair(crypt[i], key[i % key.size()]));}
+string uncrypt = crypt;
+int cs = 0, ts = 0, i = 0;
+for (auto it : mess)
+{for (auto it_1 : Num)
+{if (it_1.second == it.first)
+ts = it_1.first;}
+for (auto it_2 : Num)
+{if (it_2.second == it.second)
+cs = it_2.first;}
+uncrypt[i++] = Num[(ts - cs + 27) % 27];}
+return uncrypt;}
+int main()
+{
+string text, key, crypt, uncrypt;
+cout << "Input text: ";
+getline(cin, text);
+cout << "Input key: ";
+cin >> key;
+crypt = HELP(text, key);
+cout << "Encrypted: " << crypt << endl;
+uncrypt = VERYHELP(crypt, key);
+cout << "Decrypted: " << uncrypt;
+return 0;}
+
+
+
+
+
+
+
+#include <iostream>
+#include <vector>
+#include <iomanip>
+using namespace std;
+int main()
+{setlocale(LC_ALL, "Russian");
+int n = 4, cnt;
+vector<vector<double>> matrix =
+{{-0.77,-0.04, 0.21, -18, -1.24},
+{0.25, -1.23, 0.16, -0.09, 1.12},
+{-0.21, 0.16, 0.8, -0.13, 2.56},
+{0.15, -1.31, 0.06, 1.12, -0.77} };
+cout << "Система уравнений в виде матрицы:" << endl;
+for (auto it : matrix)
+{cnt = 1;
+cout << "|";
+for (auto i : it)
+{printf("%7.2f", i);
+if (cnt == n) printf("|");
+cnt++;}
+cout << "|" << endl;}
+for (int i = 0; i < n; i++)
+{for (int j = n; j >= i; j--)
+matrix[i][j] /= matrix[i][i];
+for (int j = i + 1; j < n; j++)
+{for (int k = n; k >= i; k--)
+matrix[j][k] -= matrix[j][i] * matrix[i][k];}}
+cout << endl << "Прямой ход:" << endl;
+for (auto it : matrix)
+{cnt = 1;
+cout << "|";
+for (auto i : it)
+{printf("%7.2f", i);
+if (cnt == n) printf("|");
+cnt++;}
+cout << "|" << endl;}
+for (int i = n - 1; i > 0; i--)
+{for (int j = i - 1; j >= 0; j--)
+{for (int k = n; k >= 0; k--)
+{matrix[j][k] -= matrix[j][i] * matrix[i][k];}}}
+cout << endl << "Обратный ход:" << endl;
+vector<double> xx;
+for (auto it : matrix)
+{xx.push_back(it[4]);
+cout << "|";
+cnt = 1;
+for (auto i : it)
+{printf("%7.2f", i);
+if (cnt == n) printf("|");
+cnt++;}
+cout << "|" << endl;}
+cout << endl;
+int i = 1;
+for (auto it : xx)
+{cout << setprecision(4) << "x" << i++ << " = " << it << endl;}
+return 0;}
