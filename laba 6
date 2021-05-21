@@ -235,3 +235,32 @@ int i = 1;
 for (auto it : xx)
 {cout << setprecision(4) << "x" << i++ << " = " << it << endl;}
 return 0;}
+
+
+
+
+
+
+
+
+#include <stdio.h>
+ 
+main()
+{
+    int a[6][6];
+ 
+    for (int i = 0; i < 6; i++)
+    {
+        for (int j = 0; j < 6; j++)
+        
+        printf("\n");
+    }
+    printf("\n\n\n");
+ 
+    for (int i = 0; i < 6; i++)
+    {
+        for (int j = 0; j < 6; j++)
+           printf("%p ", (void*)(*(a + i) + j));
+        printf("\n");
+    }
+}
