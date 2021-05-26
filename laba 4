@@ -342,3 +342,82 @@ int main() {
     Eacharray(100, nCount100);
     Eacharray(1000, nCount1000);
 }
+
+
+
+
+
+
+1/1 
+#include <iostream>
+#include <vector>
+#include <math.h>
+#define F(B)\
+if (B==1) {cout << __LINE__ << endl;}\
+else {cout << __TIME__ << endl;}\
+B += 1;\
+
+using namespace std;
+
+
+void ShakerSort(vector<int>& values) {
+    if (values.empty()) {
+        return;
+    }
+    int left = 0;
+    int right = values.size() - 1;
+    while (left <= right) {
+        for (int i = right; i > left; --i) {
+            if (values[i - 1] > values[i]) {
+                swap(values[i - 1], values[i]);
+            }
+        }
+        ++left;
+        for (int i = left; i < right; ++i) {
+            if (values[i] > values[i + 1]) {
+                swap(values[i], values[i + 1]);
+            }
+        }
+        --right;
+    }
+}
+
+int main()
+{
+    setlocale(LC_ALL,"Russian");
+    vector<int> arra = { -1 ,  2 , -3 ,  4 ,  7 ,  6, 3  };
+    int sum = 0, min=10,max=0,index=0,proizv=1,indmin=0,indmax=0;
+    for (int i : arra) {
+        if (i > 0) {
+            sum += i;
+        }
+        if (min > abs(i)) { min = abs(i); indmin = index; }
+        if (max < abs(i)) { max = abs(i); indmax = index; }
+        index++;
+    }
+
+    if (min < max) {
+        for (index = indmin; index <= indmax; index++)
+        {
+            proizv*=arra[index];
+        }
+    }
+    else {
+        for (index = indmax; index <= indmin; index++)
+        {
+            proizv *= arra[index];
+        }
+    }
+    ShakerSort(arra);
+
+
+    cout << "Сумма всех положительных элементов\n" << sum << endl;
+    cout << "Произведение элементов, находящихся между наибольшим и наименьшим по модулю\n" << proizv << endl << "Отсортированный массив\n";
+    for (auto i : arra) cout << i << endl;
+    cout << "номер строки и время" << endl;
+    
+    int B = 1;
+    F(B);
+    F(B);
+return 0;
+}
