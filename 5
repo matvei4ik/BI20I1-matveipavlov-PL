@@ -276,3 +276,182 @@ int main()
         do_it(word_in_s);
     }
 }
+
+
+
+
+
+
+
+h
+#pragma once
+#include <vector>
+#include <string>
+
+void f_Create_Plane(std::vector<std::string> word_in_s);
+
+void f_Towns_For_Plane(std::vector<std::string> word_in_s);
+
+void f_Planes(std::vector<std::string> word_in_s);
+
+void f_Planes_For_Town(std::vector<std::string> word_in_s);
+
+void stringToArray(std::vector<std::string>* word_in_s);
+
+void do_it(std::vector<std::string> word_in_s);
+
+void check_str(std::vector<std::string> word_in_s);
+
+void do_command();
+
+
+m
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include "Header.h"
+using namespace std;
+
+/// <summary>
+/// Данная функция работает с вектором поездов
+/// посредством команд из enum Type
+/// </summary>
+/// <returns></returns>
+int main()
+{
+    while (true) {
+        do_command();
+    }
+}
+
+
+S
+#pragma once
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+using namespace std;
+
+enum class Type : int
+{
+    CREATE_PLANE,
+    PLANES_FOR_TOWN,
+    TOWNS_FOR_PLANE,
+    PLANES
+};
+
+map<int, vector<string>> planes;
+Type type;
+
+void f_Create_Plane(vector<string> word_in_s) {
+
+    vector<string> address;
+
+    for (size_t i = 2; i < word_in_s.size(); i++)
+    {
+        address.push_back(word_in_s[i]);
+    }
+
+    planes[std::stoi(word_in_s[1])] = address;
+}
+
+void f_Towns_For_Plane(vector<string> word_in_s) {
+    for (auto plane : planes) {
+        if (plane.first == std::stoi(word_in_s[1])) {
+            cout << plane.first << ": ";
+            for (string one_address : plane.second) {
+                cout << one_address << " ";
+            }
+        }
+    }
+    cout << endl;
+}
+
+void f_Planes(vector<string> word_in_s) {
+    for (auto plane : planes) {
+        cout << plane.first << " ";
+    }
+    cout << endl;
+}
+
+void f_Planes_For_Town(vector<string> word_in_s) {
+    for (auto plane : planes) {
+        for (string one_address : plane.second) {
+            if (one_address == word_in_s[1]) {
+                cout << plane.first << " ";
+            }
+        }
+    }
+    cout << endl;
+}
+/// <summary>
+/// Input string to string array
+/// </summary>
+/// <param name="word_in_s">input string array (separator is " ")</param>
+void stringToArray(vector<string>* word_in_s) {
+    string s;
+
+    cin.clear();
+    s = "";
+    getline(cin, s);
+    int past_ind = 0;
+    for (auto i = 0; i < s.length(); i++) {
+        if (s[i] == ' ') {
+            word_in_s->push_back(s.substr(0, s.find_first_of(s[i])));
+            s = s.substr(s.find_first_of(s[i]) + 1);
+            i = 0;
+        }
+    }
+    word_in_s->push_back(s);
+}
+
+void do_it(vector<string> word_in_s) {
+    switch (type) {
+    case Type::CREATE_PLANE: {
+        f_Create_Plane(word_in_s);
+        break;
+    }
+    case Type::TOWNS_FOR_PLANE: {
+        f_Towns_For_Plane(word_in_s);
+        break;
+    }
+    case Type::PLANES: {
+        f_Planes(word_in_s);
+        break;
+    }
+    case Type::PLANES_FOR_TOWN: {
+        f_Planes_For_Town(word_in_s);
+        break;
+    }
+    default: {
+        return;
+    }
+    }
+}
+
+/// <summary>
+/// If in word_in_str be a any incorrect sym this thread will be terminated
+/// </summary>
+/// <param name="word_in_s"></param>
+void check_str(vector<string> word_in_s) {
+    if (!(word_in_s[0] == "CREATE_PLANE" || word_in_s[0] == "PLANES_FOR_TOWN"
+        || word_in_s[0] == "TOWNS_FOR_PLANE" || word_in_s[0] == "PLANES")) {
+        exit(0);
+    }
+}
+
+void do_command() {
+
+    vector<string> word_in_s;
+
+    stringToArray(&word_in_s);
+
+    check_str(word_in_s);
+
+    type = word_in_s[0] == "CREATE_PLANE" ? Type::CREATE_PLANE :
+        word_in_s[0] == "PLANES_FOR_TOWN" ? Type::PLANES_FOR_TOWN :
+        word_in_s[0] == "TOWNS_FOR_PLANE" ? Type::TOWNS_FOR_PLANE : Type::PLANES;
+    do_it(word_in_s);
+}
