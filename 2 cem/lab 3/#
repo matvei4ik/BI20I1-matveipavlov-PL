@@ -1,0 +1,111 @@
+using System;
+
+namespace LB3_sharp
+{
+
+    class Account
+    {
+        internal double money;
+
+        public Account(double money)
+        {
+            this.money = money;
+        }
+
+        public Account()
+        {
+            money = 0;
+        }
+        public void show()
+        {
+            Console.WriteLine("Money: {0}",this.money);
+        }
+
+         public double moneyget()
+        {
+            return money;
+        }
+        public void moneyput(double _money)
+        {
+            money += _money;
+        }
+    }
+    class Program
+    {
+        static void withdraw(double money, Account person)
+        {
+            person.money -= money;
+        }
+        static void deposit(double money, Account person)
+        {
+            person.money += money;
+        }
+        static int splitLine(string str)
+        {
+            for (int i=0; i < str.Length; i++)
+            {
+                if (str[i] == ' ') return i;
+            }
+            return 0;
+        }
+
+
+        static void Main(string[] args)
+        {
+            Account user = new Account();
+            double money;
+            string oper;
+
+            //Через friendly
+
+            while (true) {
+                Console.WriteLine("Введите тип операции и сумму в разных строках (дробная часть отделяется запятой)");
+                oper = Console.ReadLine();
+                if (oper == "exit")
+                {
+                    Environment.Exit(0);
+                }
+                money = Convert.ToDouble(Console.ReadLine());
+;                switch (oper) {
+                    case "withdraw":
+                        withdraw(money, user);
+                        user.show();
+                        break;
+                    case "deposit":
+                        deposit(money, user);
+                        user.show();
+                        break;
+                    default:
+                        Console.WriteLine("Такой операции не существует");
+                        break;
+                } 
+            }
+
+            //Через get-set
+
+            /*while (true) {
+                Console.WriteLine("Введите тип операции и сумму в разных строках (дробная часть отделяется запятой)");
+                oper = Console.ReadLine();
+                if (oper == "exit")
+                {
+                    Environment.Exit(0);
+                }
+                money = Convert.ToDouble(Console.ReadLine());
+                ;                switch (oper) {
+                    case "withdraw":
+                        user.moneyput(-money);
+                        Console.WriteLine("Money: {0}",user.moneyget());
+                        break;
+                    case "deposit":
+                        user.moneyput(money);
+                        Console.WriteLine("Money: {0}", user.moneyget());
+                        break;
+                    default:
+                        Console.WriteLine("Такой операции не существует");
+                        break;
+                } 
+            }*/
+
+        }
+    }
+}
