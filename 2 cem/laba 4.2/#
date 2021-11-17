@@ -1,0 +1,301 @@
+using System;
+using System.Buffers.Text;
+using System.ComponentModel;
+using System.IO;
+using System.Xml;
+
+namespace LB4._2_sharp
+{
+    class Program
+    {
+        static int splitLine(string str)
+        {
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (str[i] == ' ') return i;
+            }
+            return 0;
+        }
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Введите размер матрицы");
+            string str;
+            str = Console.ReadLine();
+            MyArray matrix1 = new MyArray(Convert.ToInt32(str.Substring(0,
+                splitLine(str))),Convert.ToInt32(str.Substring(splitLine(str)+1)));
+            matrix1.arrayInput();
+            Console.WriteLine("Введите размер второй матрицы");
+            str = Console.ReadLine();
+            MyArray matrix2 = new MyArray(Convert.ToInt32(str.Substring(0,
+                splitLine(str))),Convert.ToInt32(str.Substring(splitLine(str)+1)));
+            matrix2.arrayInput();
+            Console.WriteLine();
+            Console.WriteLine("Вывод первого элемента первой матрицы");
+            matrix1.getAccess(0, 0);
+            Console.WriteLine();
+            Console.WriteLine("Ссылка на первый элемент первой матрицы");
+            matrix1.getLink(0, 0);
+            Console.WriteLine("Вывод первой матрицы");
+            Console.WriteLine(matrix1 + "\n");
+            Console.WriteLine("Вывод второй матрицы");
+            Console.WriteLine(matrix2 + "\n");
+            Console.WriteLine("Умножение матриц");
+            Console.WriteLine(matrix1*matrix2 + "\n");
+            Console.WriteLine("Матрица, обратная первой");
+            matrix1.inverseMatrix();
+        }
+    }
+}
+
+
+
+
+
+
+
+MyArray.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LB4._2_sharp
+{
+    class MyArray
+    {
+        private int rowSize;
+        private int colSize;
+        private double[,] arr;
+
+        public void arrayInput()
+        {
+            string str;
+            Console.WriteLine("Заполните ячейки массива числами");
+            for (int j=0,k=0;j<colSize;j++, k=0){
+                str = Console.ReadLine();
+                for (int i = 0, m=0; i < str.Length; i++)
+                {
+                    if (str[i] == ' ')
+                    {
+                        arr[j, k++] = Convert.ToInt32(str.Substring(0,i));
+                        str = str.Substring(++i);
+                        i = 0;
+                        m++;
+                        if (m == rowSize - 1) break;
+                    }
+                }
+                arr[j, rowSize - 1] = Convert.ToInt32(str.Substring(0));
+            }
+        }
+        public MyArray(int col, int row)
+        {
+            arr=new double[col,row];
+            colSize = col;
+            rowSize = row;
+        }
+
+        public MyArray()
+        {
+            arr = new double[0,0];
+            colSize = 0;
+            rowSize = 0;
+        }
+
+        public void getAccess(int col, int row)
+        {
+            if (col > colSize || row > rowSize || col<0 || row<0)
+            {
+                Console.WriteLine("Неверный индекс массива");
+            }
+            Console.WriteLine(arr[col,row]);
+        }
+
+        public void getLink(int col, int row)
+        {
+            unsafe
+            {
+                fixed (double* p = &arr[col, row])
+                {
+                    Console.WriteLine(Convert.ToString(((IntPtr)p).ToInt64(), 16));
+                }
+            }
+        }
+
+        public void colsRows()
+        {
+            Console.WriteLine("{0} Строк, {1} столбцов",rowSize,colSize);
+        }
+
+        public void changeSize(int col, int row)
+        {
+            arr = new double[col,row];
+            arrayInput();
+        }
+
+        public double doDeterminant(MyArray matr)
+        {
+            if (matr.colSize == 1)
+            {
+                return matr.arr[0, 0];
+            }
+            if (matr.colSize == 2)
+            {
+                return matr.arr[0, 0] * matr.arr[1, 1] - matr.arr[0, 1] * matr.arr[1, 0];
+            }
+
+            return 0;
+        }
+
+        public double minor(MyArray matr,int col, int row)
+        {
+            MyArray minorMatrix = new MyArray(colSize - 1, rowSize - 1);
+            for (int a=0, i=0; a < colSize; a++) 
+                {
+                    if (a == col) continue;
+                    for (int b = 0, j=0; b < rowSize; b++)
+                    {
+                        if (b == row) continue;
+                        minorMatrix.arr[i++, j++] = matr.arr[a, b];
+                    }
+                }
+            return doDeterminant(minorMatrix);
+        }
+
+
+        public void inverseMatrix()
+        {
+            double determinant = doDeterminant(this);
+            MyArray matrix=new MyArray(colSize,rowSize);
+
+            for (int i = 0; i < colSize; i++)
+            {
+                for (int j = 0; j < rowSize; j++)
+                {
+                    
+                    matrix.arr[i, j] = minor(this, i, j);
+                }
+            }
+            for (int i = 0; i < colSize; i++)
+            {
+                for (int j = 0; j < rowSize; j++)
+                {
+                    if ((i + j) % 2 != 0)
+                    {
+                        matrix.arr[i, j] *= -1;
+                    }
+                }
+            }
+            matrix = (determinant) /matrix;
+            Console.WriteLine(matrix);
+        }
+
+        public static MyArray operator /(double a, MyArray arr)
+        {
+            MyArray array = arr;
+            for (int i = 0; i < arr.colSize; i++)
+            {
+                for (int j = 0; j < arr.rowSize; j++)
+                {
+                    array.arr[i, j] /= a;
+                }
+            }
+
+            return array;
+        }
+
+        public static MyArray operator +(MyArray arr1, MyArray arr2)
+        {
+            int maxcol;
+            int maxrow;
+            if (arr1.colSize >= arr2.colSize) maxcol = arr1.colSize;
+            else maxcol = arr2.colSize;
+            if (arr1.rowSize >= arr2.rowSize) maxrow = arr1.rowSize;
+            else maxrow = arr2.rowSize;
+            MyArray arr= new MyArray(maxcol,maxrow);
+            try
+                {
+
+                    for (int i = 0; i < maxcol; i++)
+                    {
+                        for (int j = 0; j < maxrow; j++)
+                        {
+                            arr.arr[i, j] = arr1.arr[i, j] + arr2.arr[i, j];
+                        }
+                    }
+                    return arr;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Невозможно выполнить операцию сложения\n" + e);
+                    return arr=new MyArray(0,0);
+                }
+        }
+        public static MyArray operator -(MyArray arr1, MyArray arr2)
+        {
+            int maxcol;
+            int maxrow;
+            if (arr1.colSize >= arr2.colSize) maxcol = arr1.colSize;
+            else maxcol = arr2.colSize;
+            if (arr1.rowSize >= arr2.rowSize) maxrow = arr1.rowSize;
+            else maxrow = arr2.rowSize;
+            MyArray arr= new MyArray(maxcol,maxrow);
+            try
+            {
+
+                for (int i = 0; i < maxcol; i++)
+                {
+                    for (int j = 0; j < maxrow; j++)
+                    {
+                        arr.arr[i, j] = arr1.arr[i, j] - arr2.arr[i, j];
+                    }
+                }
+                return arr;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Невозможно выполнить операцию сложения\n" + e);
+                return arr=new MyArray(0,0);
+            }
+        }
+
+        public static MyArray operator *(MyArray arr1, MyArray arr2)
+        {
+            MyArray arr = new MyArray(arr1.colSize,arr2.rowSize);
+            try
+            {
+                for (int i = 0; i < arr.colSize; i++)
+                {
+                    for (int j = 0; j < arr.rowSize; j++)
+                    {
+                        for (int k = 0; k < arr1.rowSize;k++)
+                        {
+                            arr.arr[i, j] += arr1.arr[i, k]*arr2.arr[k, j];
+                        }
+                    }
+                }
+                return arr;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Невозможно выполнить операцию сложения\n" + e);
+                return arr=new MyArray(0,0);
+            }
+        }
+
+
+        public override string ToString()
+        {
+            string str="";
+            for (int i = 0; i < colSize; i++)
+            {
+                for (int j = 0; j < rowSize; j++)
+                {
+                    str += String.Format("{0:F3}",arr[i, j]) + " ";
+                }
+                str += "\n";
+            }
+            return str;
+        }
+    }
+}
