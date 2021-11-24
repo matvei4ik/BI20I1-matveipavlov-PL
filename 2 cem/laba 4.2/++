@@ -4,7 +4,34 @@ MyArray.cpp
 
 using namespace std;
 
+class IError
+{
 
+public:
+    virtual void print()=0;
+};
+class InputError : public IError
+{
+public:
+    InputError()
+    {
+	    
+    }
+    void print()
+    {
+	    cout << "Invalid input" << endl;
+    }
+};
+
+class SizeError : public IError
+{
+public:
+    SizeError(){}
+    void print()
+    {
+	    cout << "Incorrect size" << endl;
+    }
+};
 
 static class MyArray
 {
@@ -19,12 +46,26 @@ private:
 public:
 	void arrayInput()
 	{
+		InputError inputEx;
 		cout << "Заполните ячейки массива числами\n";
 		for (int j = 0; j < colSize; j++)
 		{
 			for (int i = 0; i < rowSize; i++)
 			{
-				cin >> arr[j][i];
+				while (!(cin >>arr[j][i])) 
+    {
+        try{
+		cin.clear();
+		cin.ignore(INT_MAX, '\n');   // ignore invalid input.
+        throw inputEx;
+        }
+        catch(InputError input)
+        {
+	        input.print();
+            cout << "Повторите ввод\n";
+			continue;
+        }
+    }
 			}
 		}
 	}
@@ -203,8 +244,6 @@ public:
 			}
 		}
 		MyArray zeroarr(0, 0);
-		if (this->rowSize == arr2.colSize)
-		{
 			for (int i = 0; i < arr.colSize; i++)
 			{
 				for (int j = 0; j < arr.rowSize; j++)
@@ -216,12 +255,16 @@ public:
 				}
 			}
 			return arr;
-		}
-		else
-		{
-			cout << "Невозможно выполнить операцию умножения\n";
-			return zeroarr;
-		}
+	}
+
+	int row_size() const
+	{
+		return rowSize;
+	}
+
+	int col_size() const
+	{
+		return colSize;
 	}
 };
 
@@ -255,14 +298,42 @@ ostream& operator<<(ostream& os, MyArray arr)
 
 int main()
 {
+	SizeError sizeEx;
+	InputError input;
 	setlocale(LC_ALL, "Russian");
 	cout << "Введите размер матрицы\n";
 	int r, c;
-	cin >> c >> r;
+	while (!(cin >> c >> r)) 
+    {
+        try{
+		cin.clear();
+		cin.ignore(INT_MAX, '\n');   // ignore invalid input.
+        throw input;
+        }
+        catch(InputError input)
+        {
+	        input.print();
+            cout << "Повторите ввод\n";
+			continue;
+        }
+    }
 	MyArray matrix1(c, r);
 	matrix1.arrayInput();
 	cout << "Введите размер второй матрицы\n";
-	cin >> c >> r;
+	while (!(cin >> c >> r)) 
+    {
+        try{
+		cin.clear();
+		cin.ignore(INT_MAX, '\n');   // ignore invalid input.
+        throw input;
+        }
+        catch(InputError input)
+        {
+	        input.print();
+            cout << "Повторите ввод\n";
+			continue;
+        }
+    }
 	MyArray matrix2(c, r);
 	matrix2.arrayInput();
 	cout << endl;
@@ -273,7 +344,16 @@ int main()
 	cout << "Вывод первой матрицы" << endl << matrix1 << endl;
 	cout << "Вывод второй матрицы" << endl << matrix2 << endl;
 	cout << "Умножение матриц" << endl;
-	cout << matrix1 * matrix2 << endl;
+	try{
+		if (matrix1.row_size()==matrix2.col_size()){
+			cout << matrix1 * matrix2 << endl;
+		}
+		else throw sizeEx;
+	}
+	catch(SizeError sizeEx)
+	{
+		sizeEx.print();
+	}
 	cout << "Матрица, обратная первой" << endl;
 	matrix1.inverseMatrix();
 }
