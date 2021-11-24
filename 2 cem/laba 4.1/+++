@@ -18,36 +18,84 @@ using namespace std;
 
 void main()
 {
+        InputError input;
+        DivisionByZero division;
     setlocale(LC_ALL, "Russian");
     cout << "Введите вещественную и мнимую части первого комплексного чилса через пробел\n";
     double r,i;
     while (!(cin >> r >> i)) 
-    { 
+    {
+        try{
 		cin.clear();
 		cin.ignore(INT_MAX, '\n');   // ignore invalid input.
-        cout << "Неверные данные. Попробуйте еще раз\n";
+        throw input;
+        }
+        catch(InputError input)
+        {
+	        input.print();
+            cout << "Повторите ввод\n";
+        }
     }
 		Complex number1{r,i};
         cout << "Введите вещественную и мнимую части первого комплексного чилса через пробел\n";
     while (!(cin >> r >> i)) 
     { 
+		 try{
 		cin.clear();
 		cin.ignore(INT_MAX, '\n');   // ignore invalid input.
-		cout << "Неверные данные. Попробуйте еще раз 0\n";
+        throw input;
+        }
+        catch(InputError input)
+        {
+	        input.print();
+            cout << "Повторите ввод\n";
+        }
     }
         Complex number2(r,i);
     cout << "Сложение " << number1+number2 << endl;
     cout << "Вычитание " << number1-number2 << endl;
     cout << "Умножение " << number1*number2 << endl;
-    cout << "Деление " << number1/number2 << endl;
+        try{
+            if (number2.imaginary==0 && number2.real==0) throw division;
+            cout << "Деление " << number1/number2 << endl;
+        }
+        catch(DivisionByZero division)
+        {
+	        division.print();
+        }
     number1.showNumber();
     unsigned power;
     cout << "Введите степень числа\n";
-    cin >> power;
+        while (!(cin >> power)) 
+		{ 
+			 try{
+				cin.clear();
+				cin.ignore(INT_MAX, '\n');   // ignore invalid input.
+		        throw input;
+	        }
+	        catch(InputError input)
+	        {
+		        input.print();
+	            cout << "Повторите ввод\n";
+	        }
+		}
     number1.pow(power);
     cout << "Введите степень корня\n";
-    cin >> power;
+    while (!(cin >> power)) 
+		{ 
+			 try{
+				cin.clear();
+				cin.ignore(INT_MAX, '\n');   // ignore invalid input.
+		        throw input;
+	        }
+	        catch(InputError input)
+	        {
+		        input.print();
+	            cout << "Повторите ввод\n";
+	        }
+		}
     number1.root(power);
+
 }
 
 
@@ -55,9 +103,30 @@ void main()
 HHH
 #pragma once
 #include <string>
+#include <vector>
 
 using namespace std;
 
+
+class IError
+{
+
+public:
+    virtual void print()=0;
+};
+class InputError : public IError
+{
+public:
+    InputError();
+    void print() override;
+};
+
+class DivisionByZero : public IError
+{
+public:
+    DivisionByZero();
+    void print() override;
+};
 
 class Logger
 {
@@ -95,6 +164,30 @@ SSS
 #include "Header.h"
 
 using namespace std;
+
+
+	InputError::InputError()
+	{
+	}
+    
+    void InputError::print()
+    {
+	    cout << "Invalid input" << endl;
+    }
+    
+
+    DivisionByZero::DivisionByZero()
+    {
+    }
+
+
+    void DivisionByZero::print()
+	{
+		cout << "Division by zero" << endl;
+	}
+
+
+
 
     void Logger::info(string info)
     {
