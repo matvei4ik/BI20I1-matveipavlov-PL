@@ -1,0 +1,217 @@
+main
+#include "Node.h"
+
+int main()
+{
+	setlocale(LC_ALL, "RUS");
+	ofstream fileo;
+	fileo.open("Lab4.txt");
+
+	int N;
+	cout << "Введите количество элементов в дереве:\n ";
+	cin >> N;
+	cout << endl;
+
+	vector<Node> nodes;
+	nodes.push_back({ 0 });//заполняем нулевой элемент пустой ветвью
+
+	vector <int> numeric;
+	int i, number;
+
+	cout << "Введите все элементы дерева в произвольном порядке:\n ";
+	for (i = 0; i < N; i++)
+	{
+		cin >> number;
+		while (number == 0)//элемент не должен равняться 0
+		{
+			cout << "Элемент равен 0, введите его ещё раз: \n";
+			cin >> number;
+		}
+		numeric.push_back(number);
+	}
+	cout << endl;
+
+	cout << "Введите корень дерева:\n ";
+	cin >> number;
+	nodes.push_back({ number });
+	if (nodes[1].GetName() == 0)//если корень равен 0, завершаем программу
+	{
+		cout << "Пустое дерево" << endl;
+		fileo << "Пустое дерево" << endl;
+		fileo.close();
+		return 0;
+	}
+	nodes[1].Sort(numeric);//изначальный вектор сортируем влево и вправо
+	cout << endl;
+
+	//цикл ввода
+	for (i = 2; i <= N; i++)//записываем элементы в вектор, для ветви с индексом i левая ветвь имеет индекс 2*i, а правая 2*i+1
+	{
+		vector<int> v;
+		if (nodes[i / 2].GetName() != 0)//если ветвь-родитель ненулевая
+		{
+			if (i % 2 == 0)//берём левый или правый вектор в зависимости от остатка от деления
+				v = nodes[i / 2].GetLeft();
+			else
+				v = nodes[i / 2].GetRight();
+			if (v.size() > 1)//если больше одного элемента
+			{
+				cout << "Выберите число, которое будет являться ветвью числа " << nodes[i / 2].GetName() << ": " << v << endl;
+				cout << "Введите число:\n ";//выбор числа из вектора
+				cin >> number;
+				while (!CheckVector(number, v))
+				{
+					cout << "Введите число ещё раз:\n ";
+					cin >> number;
+				}
+				cout << endl;
+			}
+			else if (v.size() == 1)//если в векторе один элемент, ветвь равна этому элементу
+				number = v[0];
+			else//если нет элементов, ветвь равна 0
+				number = 0;
+		}
+		else//если ветвь родитель нулевая, ветвь равна 0
+			number = 0;
+		if (number == 0)//увеличиваем количество циклов, если ветвь равна 0 (n - количество ненулевых элементов дерева, введённое в начале)
+			N++;
+		nodes.push_back({ number });//добавляем в дерево
+		nodes[i].Sort(v);//взятый вектор сортируем влево и вправо
+		v.clear();
+	}
+
+	N = 1;
+	int j;
+	i = 1;
+	//цикл вывода
+	while (i < nodes.size())//пока не перебрали все элементы дерева
+	{
+		j = 0;
+		while ((j < N) && (i < nodes.size()))//перебор элементов на текущем уровне
+		{
+			if (nodes[i].GetName() != 0)
+			{
+				if (2 * i < nodes.size())
+				{
+					if (nodes[2 * i].GetName() != 0)//вывод левой ветви, если она ненулевая и не выходит за пределы вектора
+					{
+						cout << nodes[2 * i].GetName() << "<----";
+						fileo << nodes[2 * i].GetName() << "<----";
+					}
+					if ((nodes[2 * i].GetName() != 0) || (nodes[2 * i + 1].GetName() != 0))
+					{
+						cout << nodes[i].GetName();
+						fileo << nodes[i].GetName();
+					}
+				}
+				if (2 * i + 1 < nodes.size())
+				{
+					if (nodes[2 * i + 1].GetName() != 0)//аналогично с правой
+					{
+						cout << "---->" << nodes[2 * i + 1].GetName();
+						fileo << "---->" << nodes[2 * i + 1].GetName();
+					}
+				}
+				cout << "     ";
+				fileo << "     ";
+			}
+			j++;
+			i++;
+		}
+		cout << endl;
+		fileo << endl;
+		N *= 2;
+	}
+	fileo.close();
+	return 0;
+}
+
+
+
+
+
+
+
+
+Node.h
+#pragma once
+#include <iostream>
+#include <vector>
+#include <fstream>
+
+using namespace std;
+
+class Node {
+public:
+	Node(int num);
+
+	int GetName();
+
+	void Sort(vector <int> v);//сортировка передаваемого вектора влево и вправо
+
+	vector<int> GetLeft();
+	vector<int> GetRight();
+private:
+	int name;
+	vector <int> left, right;
+};
+
+ostream& operator<<(ostream& s, const vector<int>& v);//перегрузка вывода для вектора
+
+bool CheckVector(const int& a, const vector<int>& v);//функция проверки нахождения элемента в векторе
+
+
+
+
+
+
+Node.cpp
+#include "Node.h"
+
+ostream& operator<<(ostream& s, const vector<int>& v)//перегрузка вывода для вектора
+{
+	for (const auto& item : v)
+		s << item << ' ';
+	return s;
+}
+
+Node::Node(int num)
+{
+	name = num;
+}
+int Node::GetName()
+{
+	return name;
+}
+void Node::Sort(vector <int> v)//сортировка передаваемого вектора влево и вправо
+{
+	bool s = false;
+	for (const auto& item : v)
+	{
+		if (item < name)//если меньше - влево
+			left.push_back(item);
+		else if (item > name)//если больше - направо
+			right.push_back(item);
+		else if (item == name)
+			if (s == true)//если равный ветви элемент попадается во второй раз - добавляем
+				right.push_back(item);
+			else//если равный ветви элемент попадается в первый раз - меняем переменную-признак и не записываем в вектор
+				s = true;
+	}
+}
+vector<int> Node::GetLeft()
+{
+	return left;
+}
+vector<int> Node::GetRight()
+{
+	return right;
+}
+
+bool CheckVector(const int& a, const vector<int>& v)//функция проверки нахождения элемента в векторе
+{
+	for (const auto& item : v)
+		if (a == item)
+			return true;
+	return false;
+}
