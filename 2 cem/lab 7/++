@@ -5,7 +5,7 @@ int main()
 {
 	setlocale(LC_ALL, "RUS");
 	ofstream fileo;
-	fileo.open("Lab4.txt");
+	fileo.open("Lab7.txt");
 
 	int N;
 	cout << "Введите количество элементов в дереве:\n ";
