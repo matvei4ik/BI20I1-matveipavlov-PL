@@ -1,0 +1,152 @@
+1////////////////////////Составить программу, которая будет считывать введённое пятизначное число. 
+После чего, каждую цифру этого числа необходимо вывести в новой строке.
+#include <iostream>
+using namespace std;
+int main()
+{
+
+    int a = 12345;
+    int i = 10000;
+    while (i > 0)
+    {
+        cout << (a / i) % 10 << "\n";
+        i = i / 10;
+    }
+   
+}
+
+
+
+2///////////////////////////Запрограммировать следующее выражение: (а + b — f / а) + f * a * a — (a + b) Числа а, b, f вводятся с клавиатуры. 
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	
+	int* pa = new int ;
+	int* pb = new int;
+	int* pf = new int;
+	cin >> *pa;
+	
+	cin >> *pb;
+	
+	cin >> *pf;
+	
+	int x1 = ((*pa) +(*pb)) - ((*pf)/(*pa));
+	
+	int x2 = (*pf)*(*pa)*(*pa);
+
+	int x3 = (*pa)+(*pb);
+	
+	int x = x1+x2-x3;
+	cout << x;
+	delete pa;
+	delete pb;
+	delete pf;
+}
+
+
+
+3////////////////////////// Напишите программу, которая позволяет пользователю ввести в консоли букву нижнего регистра, 
+переводит её в верхний регистр и результат выводит в консоль.
+#include <iostream>
+#include <locale>
+using namespace std;
+int main()
+{
+	char chLetter('a');
+
+
+	setlocale(LC_ALL, "Russian");
+
+	cout << "Введите букву нижнего регистра:\n\n";
+
+	cin >> chLetter;
+	cout  << chLetter << ".\n\n";
+	char* b = &chLetter;
+
+	*b = *b - 32;
+
+	cout << "\nТа же буква в верхнем регистре: " << *b << ".\n\n";
+
+	return 0;
+}
+
+
+4//////////////Программа должна переводить число, введенное с клавиатуры в метрах, в километры.
+#include <iostream>
+using namespace std;
+int main()
+{
+	float a;
+	cin >> a;
+	float* km = &a;
+	float km1 = *km;
+	km1 = km1 / 1000;
+	cout << km1 << endl;
+
+	float* mi = &a;
+	float mi1 = *km;
+	mi1 = mi1 / 1609, 34;
+	cout << mi1;
+
+}
+
+6///////////////////////// сравнение чисел 
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int* c11 = new int;
+    int* c22 = new int;
+    cin >> *c11;
+    cin >> *c22;
+
+    int c1 = *c11 ;
+    int c2 = *c22;
+ 
+    if (c1 > c2) {
+        cout << "more ";
+    }
+    else if (c1 < c2) {
+        cout << "less";
+    }
+    else {
+        cout << "=";
+    };
+    delete c11;
+    delete c22;
+}
+
+7//////////////////// Составить алгоритм увеличения всех трех, введённых с клавиатуры, переменных на 5,если среди них есть хотя бы две равные. 
+В противном случае выдать ответ «равных нет»
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int* c11 = new int;
+    int* c22 = new int;
+    int* c33 = new int;
+    cout << "1 number  "; 
+    cin >> *c11;
+    cout << "2 number ";
+    
+    cin >> *c22;
+    cout << "3 number ";
+    cin >> *c33;
+    int c1 =*c11;
+    int c2 = *c22;
+    int c3 = *c33;
+    
+    if (c1 == c2 || c1 == c3 || c2 == c3)
+    {
+        cout << c1 + 5 << endl << c2 + 5 << endl << c3 + 5 << endl;
+    }
+    else {
+        cout << "d";
+    };
+
+}
