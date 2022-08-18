@@ -1,0 +1,104 @@
+2////////////////////// найти общие элементы в дувух массивах 
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int sizeA, sizeB;
+    cout << "Введите размер первого массива: ";
+    cin >> sizeA;
+    cout << "Введите размер второго массива: ";
+    cin >> sizeB;
+    int *arrA = new int[sizeA];
+    int *arrB = new int[sizeB];
+    cout << "\n\nПервый массив: ";
+    for (int x = 0; x < sizeA; x++)
+    {
+        arrA[x] = rand() % 9 + 1;
+        cout << arrA[x] << " ";
+    }
+    cout << "\n\nВторой массив: ";
+    for (int x = 0; x < sizeB; x++)
+    {
+        arrB[x] = rand() % 9 + 1;
+        cout << arrB[x] << " ";
+    }
+
+    int tmp = 0;
+    for (int x = 0; x < sizeA; x++)
+    {
+        for (int y = 0; y < sizeB; y++)
+        {
+            if (arrA[x] == arrB[y])
+            {
+                tmp++;
+            }
+        }
+    }
+
+    int sizeC = tmp;
+    int *arrtmp = new int[sizeC];
+    tmp = 0;
+    for (int y = 0; y < sizeB; y++)
+    {
+        for (int z = 0; z < sizeA; z++)
+        {
+            if (arrB[y] == arrA[z])
+            {
+                arrtmp[tmp] = arrB[y];
+                tmp++;
+            }
+        }
+    }
+
+    int *arrC = new int[sizeC];
+    cout << "\n\nТретий массив: ";
+    for (int x = 0; x < sizeC; x++)
+    {
+        arrC[x] = arrtmp[x];
+        cout << arrC[x] << " ";
+    }
+
+    delete arrA;
+    delete arrB;
+    delete arrC;
+    delete arrtmp;
+}
+
+
+5||||||||||||||||||||||||||||||||||||||| две кучи камней
+#include <iostream>
+#include <cstdio>
+#include <vector>
+#include <climits>
+#include <algorithm>
+#include <cstdlib>
+
+
+using namespace std;
+
+int main()
+{
+   int a;
+   std::vector<int> a(n) ;
+   for (int i=0; i<n; i++){
+   scnaf ("%d", %a[i]);
+   }
+   int miDiff = INT_MAX;
+   for (int code = 0; code <(1<<(n-1)); code++){
+       int sum0=0;
+       int sum1=1;
+       for (int i=0;i<n;i++){
+           if (((code>>i)&1)==0){
+               sum0 +=a[i];
+           }else{
+               sum1 +=a[i];
+           }
+       }
+       minDiff = std::min(minDiff, std::abs(sum0-sum1));
+   }
+   printf("%
+   return 0;
+}
