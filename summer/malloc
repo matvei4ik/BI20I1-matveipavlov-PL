@@ -1,0 +1,111 @@
+1 malloc/ напишите программу которая заполняяет строку символами 
+
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+int main()
+{
+  int size;
+ 
+  cout << "Укажите длину строки в символах: ";
+  cin >> size;
+ 
+  char * mem = (char*) malloc(len + 1);         
+  if (mem==NULL) exit (1);                       
+ 
+  for (int i = 0; i < size; i++)
+    mem[i] = rand() % 26 + 'a';
+  mem[size]='\0';                                
+ 
+  cout << "Случайная строка: " << buffer << "n";
+  free(buffer);                                 
+  return 0;
+}
+
+
+2 calloc/ напишите программу которая заполняет масси числами 
+
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+int main()
+{
+  int size;
+ 
+  cout << ("Введите количество элементов: ");
+  cin >> size;
+  int * mas = (int*) calloc(size,sizeof(int));
+ 
+  if (mas == NULL) exit (1);     
+ 
+  for (int i = 0; i < size; i++)              
+  {
+    cout << ("Введите число: ");
+    cin >> mas[i];
+  }
+ 
+  cout << "Введённые числа: ";
+  for (int i = 0; i < size; i++)           
+      std::cout << mas[i] << " ";
+  free (mas);                                  
+  return 0;
+}
+
+
+3 realloc/ тоже что и в прошлом, но каждый раз создает новый массив (заодно попробовал счетчик в деле)
+
+
+
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+int main()
+{
+  int input;
+  int counе = 0;                                     
+  int * values = NULL;
+  int * many_numbers;
+ 
+  do {
+     cout << "Введите целое значение (0 - выход): ";
+     cin >> input;
+     count++;
+ 
+     many_numbers = (int*) realloc (values, count * sizeof(int)); 
+ 
+     if (many_numbers != NULL)
+     {
+       values = many_numbers;
+       values[count - 1] = input;                      
+     }
+     else
+     {
+       free (values);                                 
+       cout << "Ошибка перевыделения памяти!";
+       exit (1);                                     
+     }
+  } while (input != 0);                                   
+ 
+  std::cout << "Введенные числа: ";
+  for (int i = 0; i < count; i++) cout << values[i] << " ";
+  free (values);                                         
+ 
+  return 0;
+}
+
+попробовал поработать с файлами 
+#include "stdafx.h"
+#include <fstream>
+using namespace std;
+ 
+int main(int argc, char* argv[])
+{
+    ofstream fout("alkash.txt"); 
+    fout << "тут был матвей ";
+    fout.close(); // закрываем файл
+    system("pause");
+    return 0;
+}
+
+в бинарном файле меньше байт занимакется информация, но ее нельзя читать вручную. ее можно извлец непоредственно в программе 
